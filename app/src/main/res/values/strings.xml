@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Turkish Word Finder</string>
+    <string name="enter_letters">Enter letters&#8230;</string>
+    <string name="seeding_database">Preparing Dictionary&#8230;</string>
+    <string name="no_words_found">No words found</string>
+</resources>
