@@ -13,7 +13,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
+import java.util.Locale
 import javax.inject.Inject
+
+private val TURKISH_LOCALE: Locale = Locale.Builder().setLanguage("tr").setRegion("TR").build()
 
 @Entity(
     tableName = "words",
@@ -55,7 +58,7 @@ class WordRepository @Inject constructor(
 
     fun getWords(letters: String): Flow<Result<Map<Int, List<String>>>> = flow<Result<Map<Int, List<String>>>> {
         try {
-            val sanitized = letters.lowercase().filter { it.isLetter() }
+            val sanitized = letters.lowercase(TURKISH_LOCALE).filter { it.isLetter() }
             if (sanitized.isEmpty()) {
                 emit(Result.success(emptyMap()))
                 return@flow
