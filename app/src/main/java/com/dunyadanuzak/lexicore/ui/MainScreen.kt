@@ -23,6 +23,7 @@ import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -152,6 +153,18 @@ fun LexiCoreMainScreen(viewModel: MainViewModel) {
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             },
+                            trailingIcon = {
+                                if (uiState.input.isNotEmpty()) {
+                                    IconButton(onClick = { viewModel.onInputChange("") }) {
+                                        Text(
+                                            text = "✕",
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                            fontSize = 18.sp,
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                    }
+                                }
+                            },
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(12.dp),
                             singleLine = true,
@@ -199,7 +212,7 @@ fun LexiCoreMainScreen(viewModel: MainViewModel) {
                     state = listState,
                     modifier = Modifier.weight(1f),
                     verticalArrangement = Arrangement.spacedBy(16.dp),
-                    contentPadding = PaddingValues(bottom = 24.dp)
+                    contentPadding = PaddingValues(bottom = innerPadding.calculateBottomPadding() + 24.dp)
                 ) {
                     items(
                         items = listItems,
