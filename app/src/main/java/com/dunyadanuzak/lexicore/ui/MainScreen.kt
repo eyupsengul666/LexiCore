@@ -20,7 +20,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.IconButton
@@ -33,7 +32,7 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -46,6 +45,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 // import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dunyadanuzak.lexicore.R
 // import com.google.android.gms.ads.AdRequest
 // import com.google.android.gms.ads.AdSize
@@ -59,7 +59,7 @@ sealed class ListItem {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LexiCoreMainScreen(viewModel: MainViewModel) {
-    val uiState by viewModel.uiState.collectAsState()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val uriHandler = LocalUriHandler.current
 
     Scaffold(
@@ -80,24 +80,6 @@ fun LexiCoreMainScreen(viewModel: MainViewModel) {
             )
         }
     ) { innerPadding ->
-        if (uiState.isInitializing) {
-            Box(
-                modifier = Modifier
-                    .padding(innerPadding)
-                    .fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    CircularProgressIndicator(color = MaterialTheme.colorScheme.tertiary)
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Text(
-                        stringResource(R.string.seeding_database),
-                        color = MaterialTheme.colorScheme.onBackground,
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                }
-            }
-        } else {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -191,20 +173,23 @@ fun LexiCoreMainScreen(viewModel: MainViewModel) {
                     }
                 }
  
-                val listItems = remember(uiState.results) {
-                    buildList {
-                        uiState.results.entries
-                            .sortedByDescending { it.key }
-                            .forEach { (length, words) ->
-                                add(ListItem.Header(length, words.size))
-                                val columnsPerRow = when {
-                                    length >= 13 -> 2
-                                    else -> 3
+                val listItems by remember {
+                    derivedStateOf {
+                        buildList {
+                            uiState.results.entries
+                                .sortedByDescending { it.key }
+                                .forEach { (length, words) ->
+                                    add(ListItem.Header(length, words.size))
+                                    val columnsPerRow = when {
+                                        length >= 22 -> 1
+                                        length >= 13 -> 2
+                                        else -> 3
+                                    }
+                                    words.chunked(columnsPerRow).forEachIndexed { index, rowWords ->
+                                        add(ListItem.WordRow(rowWords, length, index))
+                                    }
                                 }
-                                words.chunked(columnsPerRow).forEachIndexed { index, rowWords ->
-                                    add(ListItem.WordRow(rowWords, length, index))
-                                }
-                            }
+                        }
                     }
                 }
  
@@ -244,7 +229,6 @@ fun LexiCoreMainScreen(viewModel: MainViewModel) {
 
                 // AdBanner(Modifier.padding(bottom = innerPadding.calculateBottomPadding()))
             }
-        }
     }
 }
 
@@ -278,13 +262,12 @@ fun ResultHeader(length: Int, count: Int) {
 @Composable
 fun ResultRow(words: List<String>, wordLength: Int) {
     val columnsPerRow = when {
+        wordLength >= 22 -> 1
         wordLength >= 13 -> 2
         else -> 3
     }
     val fontSize = when {
-        wordLength >= 20 -> 11.sp
-        wordLength >= 15 -> 12.sp
-        wordLength >= 13 -> 13.sp
+        wordLength >= 20 -> 13.sp
         else -> 14.sp
     }
     val cardHeight = when {

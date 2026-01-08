@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Türkçe Kelime Bulucu</string>
     <string name="enter_letters">Harfleri girin&#8230;</string>
-    <string name="seeding_database">Sözlük Hazırlanıyor&#8230;</string>
     <string name="no_words_found">Kelime bulunamadı</string>
 </resources>
