@@ -29,6 +29,7 @@ def main():
     cursor.execute("PRAGMA page_size = 4096")
     cursor.execute("PRAGMA journal_mode = OFF")
     cursor.execute("PRAGMA synchronous = OFF")
+    cursor.execute("PRAGMA user_version = 2")
     
     cursor.execute("CREATE TABLE IF NOT EXISTS android_metadata (locale TEXT)")
     cursor.execute("DELETE FROM android_metadata")
