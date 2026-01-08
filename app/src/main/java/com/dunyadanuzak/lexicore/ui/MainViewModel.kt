@@ -1,6 +1,5 @@
 package com.dunyadanuzak.lexicore.ui
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dunyadanuzak.lexicore.data.WordRepository
@@ -19,7 +18,7 @@ import javax.inject.Inject
 data class MainUiState(
     val input: String = "",
     val results: Map<Int, List<String>> = emptyMap(),
-    val isInitializing: Boolean = true,
+    val isInitializing: Boolean = false,
     val errorMessage: String? = null
 )
 
@@ -36,7 +35,7 @@ class MainViewModel @Inject constructor(
             _uiState
                 .map { it.input }
                 .distinctUntilChanged()
-                .debounce(300)
+                .debounce(200)
                 .flatMapLatest { query ->
                     if (query.isBlank()) {
                         flowOf(Result.success(emptyMap<Int, List<String>>()))
@@ -50,19 +49,13 @@ class MainViewModel @Inject constructor(
                             _uiState.update { state -> state.copy(results = it, errorMessage = null) }
                         },
                         onFailure = { 
-                            _uiState.update { state -> state.copy(results = emptyMap(), errorMessage = "Hata: ${it.localizedMessage}") }
+                            _uiState.update { state -> state.copy(results = emptyMap(), errorMessage = "Beklenmeyen bir hata oluştu") }
                         }
                     )
                 }
         }
     }
 
-    fun initializeDatabase(context: Context) {
-        viewModelScope.launch {
-            repository.initializeDatabase(context)
-            _uiState.update { it.copy(isInitializing = false) }
-        }
-    }
 
     fun onInputChange(newInput: String) {
         _uiState.update { it.copy(input = newInput) }

@@ -4,8 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.dunyadanuzak.lexicore.ui.LexiCoreMainScreen
 import com.dunyadanuzak.lexicore.ui.MainViewModel
@@ -22,12 +20,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             TürkçeKelimeBulucuTheme {
                 val viewModel: MainViewModel = hiltViewModel()
-                val context = LocalContext.current
-                
-                LaunchedEffect(Unit) {
-                    viewModel.initializeDatabase(context)
-                }
-                
                 LexiCoreMainScreen(viewModel = viewModel)
             }
         }
