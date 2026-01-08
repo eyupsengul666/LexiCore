@@ -181,7 +181,6 @@ fun LexiCoreMainScreen(viewModel: MainViewModel) {
                                 .forEach { (length, words) ->
                                     add(ListItem.Header(length, words.size))
                                     val columnsPerRow = when {
-                                        length >= 22 -> 1
                                         length >= 13 -> 2
                                         else -> 3
                                     }
@@ -241,13 +240,13 @@ fun ResultHeader(length: Int, count: Int) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "$length Harfli",
+                text = stringResource(R.string.word_length_suffix, length),
                 color = MaterialTheme.colorScheme.tertiary,
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp
             )
             Text(
-                text = "$count kelime",
+                text = stringResource(R.string.word_count_suffix, count),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontSize = 11.sp
             )
@@ -262,7 +261,6 @@ fun ResultHeader(length: Int, count: Int) {
 @Composable
 fun ResultRow(words: List<String>, wordLength: Int) {
     val columnsPerRow = when {
-        wordLength >= 22 -> 1
         wordLength >= 13 -> 2
         else -> 3
     }
