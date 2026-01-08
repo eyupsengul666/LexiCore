@@ -1,5 +1,7 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Türkçe Kelime Bulucu</string>
     <string name="enter_letters">Harfleri girin&#8230;</string>
     <string name="no_words_found">Kelime bulunamadı</string>
+    <string name="word_length_suffix" tools:ignore="PluralsCandidate">%d Harfli</string>
+    <string name="word_count_suffix" tools:ignore="PluralsCandidate">%d kelime</string>
 </resources>

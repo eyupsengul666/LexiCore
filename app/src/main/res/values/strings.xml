@@ -1,5 +1,7 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Turkish Word Finder</string>
     <string name="enter_letters">Enter letters&#8230;</string>
     <string name="no_words_found">No words found</string>
+    <string name="word_length_suffix" tools:ignore="PluralsCandidate">%d Letters</string>
+    <string name="word_count_suffix" tools:ignore="PluralsCandidate">%d words</string>
 </resources>
