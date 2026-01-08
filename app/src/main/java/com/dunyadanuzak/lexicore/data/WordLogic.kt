@@ -1,6 +1,5 @@
 package com.dunyadanuzak.lexicore.data
 
-import android.content.Context
 import androidx.room.Dao
 import androidx.room.Database
 import androidx.room.Entity
@@ -12,7 +11,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.withContext
 import java.util.Locale
 import javax.inject.Inject
 
@@ -21,7 +19,7 @@ private val TURKISH_LOCALE: Locale = Locale.Builder().setLanguage("tr").setRegio
 @Entity(
     tableName = "words",
     indices = [
-        Index(value = ["length"]),
+        Index(value = ["length", "word"]),
         Index(value = ["word"], unique = true)
     ]
 )
@@ -37,11 +35,11 @@ interface WordDao {
     @Query("SELECT COUNT(*) FROM words")
     suspend fun getCount(): Int
 
-    @Query("SELECT * FROM words WHERE length <= :maxLen")
-    suspend fun findPotentialWords(maxLen: Int): List<WordEntity>
+    @Query("SELECT word FROM words WHERE length <= :maxLen AND length >= 2")
+    suspend fun findPotentialWords(maxLen: Int): List<String>
 }
 
-@Database(entities = [WordEntity::class], version = 1, exportSchema = false)
+@Database(entities = [WordEntity::class], version = 2, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun wordDao(): WordDao
 }
@@ -49,12 +47,7 @@ abstract class AppDatabase : RoomDatabase() {
 class WordRepository @Inject constructor(
     private val wordDao: WordDao
 ) {
-    
-    suspend fun initializeDatabase(context: Context) {
-        withContext(Dispatchers.IO) {
-            wordDao.getCount()
-        }
-    }
+
 
     fun getWords(letters: String): Flow<Result<Map<Int, List<String>>>> = flow<Result<Map<Int, List<String>>>> {
         try {
@@ -70,12 +63,12 @@ class WordRepository @Inject constructor(
             }
             
             val potential = wordDao.findPotentialWords(sanitized.length)
-            val filtered: Map<Int, List<String>> = potential.filter { entity ->
-                if (entity.word.length > sanitized.length) return@filter false
+            val filtered: Map<Int, List<String>> = potential.filter { word ->
+                if (word.length > sanitized.length) return@filter false
                 
                 val wordCounts = mutableMapOf<Char, Int>()
                 var possible = true
-                for (char in entity.word) {
+                for (char in word) {
                     val count = wordCounts.getOrDefault(char, 0) + 1
                     wordCounts[char] = count
                     if (count > userCounts.getOrDefault(char, 0)) {
@@ -84,7 +77,7 @@ class WordRepository @Inject constructor(
                     }
                 }
                 possible
-            }.map { it.word }
+            }
             .groupBy { it.length }
             .toSortedMap(reverseOrder())
             
