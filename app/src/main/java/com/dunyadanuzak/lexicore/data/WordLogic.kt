@@ -35,7 +35,7 @@ interface WordDao {
     @Query("SELECT COUNT(*) FROM words")
     suspend fun getCount(): Int
 
-    @Query("SELECT word FROM words WHERE length <= :maxLen AND length >= 2")
+    @Query("SELECT word FROM words WHERE length <= :maxLen AND length >= 2 ORDER BY length, word")
     suspend fun findPotentialWords(maxLen: Int): List<String>
 }
 
