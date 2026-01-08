@@ -30,6 +30,10 @@ def main():
     cursor.execute("PRAGMA journal_mode = OFF")
     cursor.execute("PRAGMA synchronous = OFF")
     
+    cursor.execute("CREATE TABLE IF NOT EXISTS android_metadata (locale TEXT)")
+    cursor.execute("DELETE FROM android_metadata")
+    cursor.execute("INSERT INTO android_metadata VALUES ('tr_TR')")
+    
     cursor.execute("""
         CREATE TABLE words (
             id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
@@ -38,17 +42,20 @@ def main():
         )
     """)
     
+    unique_words = set()
+    data_to_insert = []
+    
     with open(WORDS_FILE, 'r', encoding='utf-8') as f:
-        words = []
         for line in f:
             word = line.strip().lower()
-            if word:
-                words.append((word, len(word)))
+            if word and word not in unique_words:
+                unique_words.add(word)
+                data_to_insert.append((word, len(word)))
     
-    cursor.executemany("INSERT INTO words (word, length) VALUES (?, ?)", words)
+    cursor.executemany("INSERT INTO words (word, length) VALUES (?, ?)", data_to_insert)
     conn.commit()
     
-    cursor.execute("CREATE INDEX index_words_length ON words(length)")
+    cursor.execute("CREATE INDEX index_words_length_word ON words(length, word)")
     cursor.execute("CREATE UNIQUE INDEX index_words_word ON words(word)")
     
     cursor.execute("ANALYZE")
@@ -68,7 +75,7 @@ def main():
     print(f"Word count: {count:,}")
     print(f"Length range: {min_len}-{max_len} characters")
     print(f"File size: {db_size:.2f} MB")
-    print("Indexes: index_words_length, index_words_word")
+    print(f"Indexes: index_words_length_word, index_words_word")
 
 if __name__ == "__main__":
     main()
