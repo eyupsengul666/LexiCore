@@ -11,10 +11,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import java.text.Collator
 import java.util.Locale
 import javax.inject.Inject
 
 private val TURKISH_LOCALE: Locale = Locale.Builder().setLanguage("tr").setRegion("TR").build()
+private val TURKISH_COLLATOR: Collator = Collator.getInstance(TURKISH_LOCALE).apply {
+    strength = Collator.PRIMARY
+}
 
 @Entity(
     tableName = "words",
@@ -35,7 +39,7 @@ interface WordDao {
     @Query("SELECT COUNT(*) FROM words")
     suspend fun getCount(): Int
 
-    @Query("SELECT word FROM words WHERE length <= :maxLen AND length >= 2 ORDER BY length, word")
+    @Query("SELECT word FROM words WHERE length <= :maxLen AND length >= 2")
     suspend fun findPotentialWords(maxLen: Int): List<String>
 }
 
@@ -47,7 +51,6 @@ abstract class AppDatabase : RoomDatabase() {
 class WordRepository @Inject constructor(
     private val wordDao: WordDao
 ) {
-
 
     fun getWords(letters: String): Flow<Result<Map<Int, List<String>>>> = flow<Result<Map<Int, List<String>>>> {
         try {
@@ -79,6 +82,7 @@ class WordRepository @Inject constructor(
                 possible
             }
             .groupBy { it.length }
+            .mapValues { (_, words) -> words.sortedWith { a, b -> TURKISH_COLLATOR.compare(a, b) } }
             .toSortedMap(reverseOrder())
             
             emit(Result.success(filtered))

@@ -1,7 +1,13 @@
 package com.dunyadanuzak.lexicore.ui
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.awaitEachGesture
+import androidx.compose.foundation.gestures.awaitFirstDown
+import androidx.compose.foundation.gestures.waitForUpOrCancellation
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -39,6 +45,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -50,11 +58,14 @@ import com.dunyadanuzak.lexicore.R
 // import com.google.android.gms.ads.AdRequest
 // import com.google.android.gms.ads.AdSize
 // import com.google.android.gms.ads.AdView
+import kotlinx.coroutines.withTimeoutOrNull
 
 sealed class ListItem {
     data class Header(val length: Int, val count: Int) : ListItem()
     data class WordRow(val words: List<String>, val length: Int, val index: Int) : ListItem()
 }
+
+private fun getColumnsPerRow(wordLength: Int): Int = if (wordLength >= 13) 2 else 3
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -180,10 +191,7 @@ fun LexiCoreMainScreen(viewModel: MainViewModel) {
                                 .sortedByDescending { it.key }
                                 .forEach { (length, words) ->
                                     add(ListItem.Header(length, words.size))
-                                    val columnsPerRow = when {
-                                        length >= 13 -> 2
-                                        else -> 3
-                                    }
+                                    val columnsPerRow = getColumnsPerRow(length)
                                     words.chunked(columnsPerRow).forEachIndexed { index, rowWords ->
                                         add(ListItem.WordRow(rowWords, length, index))
                                     }
@@ -260,10 +268,7 @@ fun ResultHeader(length: Int, count: Int) {
 
 @Composable
 fun ResultRow(words: List<String>, wordLength: Int) {
-    val columnsPerRow = when {
-        wordLength >= 13 -> 2
-        else -> 3
-    }
+    val columnsPerRow = getColumnsPerRow(wordLength)
     val fontSize = when {
         wordLength >= 20 -> 13.sp
         else -> 14.sp
@@ -272,6 +277,9 @@ fun ResultRow(words: List<String>, wordLength: Int) {
         wordLength >= 15 -> 48.dp
         else -> 44.dp
     }
+    val context = LocalContext.current
+    val clipboardManager = remember { context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager }
+    
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -280,7 +288,19 @@ fun ResultRow(words: List<String>, wordLength: Int) {
             Surface(
                 modifier = Modifier
                     .weight(1f)
-                    .height(cardHeight),
+                    .height(cardHeight)
+                    .pointerInput(word) {
+                        awaitEachGesture {
+                            val down = awaitFirstDown()
+                            val longPress = withTimeoutOrNull(666) {
+                                waitForUpOrCancellation()
+                            }
+                            if (longPress == null && down.pressed) {
+                                clipboardManager.setPrimaryClip(ClipData.newPlainText("word", word))
+                                waitForUpOrCancellation()
+                            }
+                        }
+                    },
                 color = MaterialTheme.colorScheme.surfaceVariant,
                 shape = RoundedCornerShape(14.dp),
                 border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline)

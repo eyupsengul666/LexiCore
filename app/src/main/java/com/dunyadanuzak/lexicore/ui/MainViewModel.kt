@@ -18,7 +18,6 @@ import javax.inject.Inject
 data class MainUiState(
     val input: String = "",
     val results: Map<Int, List<String>> = emptyMap(),
-    val isInitializing: Boolean = false,
     val errorMessage: String? = null
 )
 
