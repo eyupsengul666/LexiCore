@@ -14,11 +14,10 @@ No tracking. No analytics. No cloud sync. Your data stays on your device.
 |-----------|------------|
 | Language | Kotlin 2.3.0 |
 | UI | Jetpack Compose |
-| Database | Room (SQLite) |
-| DI | Hilt |
-| Target SDK | 36 (Android 16) |
-| Min SDK | 24 (Android 7.0) |
-| Build | Gradle 9.2.1 (Kotlin DSL) |
+| Database | Room 2.8.4 |
+| DI | Hilt 2.59 |
+| Target SDK | 36 (Android 15 / 16) |
+| Build | Gradle 9.3.0 / AGP 9.0.0 |
 | Java | 25 |
 
 ## Build
