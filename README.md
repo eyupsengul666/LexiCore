@@ -1,12 +1,10 @@
 # LexiCore: Turkish Word Finder
 
-[![Google Play](https://img.shields.io/badge/Google%20Play-Download-green?style=for-the-badge&logo=google-play)](https://play.google.com/store/apps/details?id=com.dunyadanuzak.lexicore)
-
 Turkish word finder for Android. Minimal, fast, open source.
 
 ## Download
 
-<a href="https://play.google.com/store/apps/details?id=com.dunyadanuzak.lexicore">
+<a href="https://play.google.com/store/apps/details?id=com.dunyadanuzak.lexicore" target="_blank">
   <img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" alt="Get it on Google Play" height="80"/>
 </a>
 
