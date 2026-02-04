@@ -1,6 +1,14 @@
-# LexiCore
+# LexiCore: Turkish Word Finder
+
+[![Google Play](https://img.shields.io/badge/Google%20Play-Download-green?style=for-the-badge&logo=google-play)](https://play.google.com/store/apps/details?id=com.dunyadanuzak.lexicore)
 
 Turkish word finder for Android. Minimal, fast, open source.
+
+## Download
+
+<a href="https://play.google.com/store/apps/details?id=com.dunyadanuzak.lexicore">
+  <img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" alt="Get it on Google Play" height="80"/>
+</a>
 
 ## About
 
@@ -15,9 +23,9 @@ No tracking. No analytics. No cloud sync. Your data stays on your device.
 | Language | Kotlin 2.3.0 |
 | UI | Jetpack Compose |
 | Database | Room 2.8.4 |
-| DI | Hilt 2.59 |
-| Target SDK | 36 (Android 15 / 16) |
-| Build | Gradle 9.3.0 / AGP 9.0.0 |
+| DI | Hilt 2.59.1 |
+| Target SDK | 36 (Android 16) |
+| Build | Gradle 9.3.1 / AGP 9.0.0 |
 | Java | 25 |
 
 ## Build
@@ -44,7 +52,7 @@ See privacy policy: https://www.dunyadanuzak.com/privacy-lexicore.html
 
 ## License
 
-This project is licensed under the GNU General Public License v3.0.
+This project is licensed under the GNU General Public License v3.0 or later (GPL-3.0-or-later).
 
 See [LICENSE](LICENSE) for details.
 

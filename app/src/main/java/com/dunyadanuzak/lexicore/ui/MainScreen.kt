@@ -52,12 +52,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-// import androidx.compose.ui.viewinterop.AndroidView
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dunyadanuzak.lexicore.R
-// import com.google.android.gms.ads.AdRequest
-// import com.google.android.gms.ads.AdSize
-// import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdSize
+import com.google.android.gms.ads.AdView
 import kotlinx.coroutines.withTimeoutOrNull
 
 sealed class ListItem {
@@ -234,7 +234,7 @@ fun LexiCoreMainScreen(viewModel: MainViewModel) {
                     }
                 }
 
-                // AdBanner(Modifier.padding(bottom = innerPadding.calculateBottomPadding()))
+                AdBanner(Modifier.padding(bottom = innerPadding.calculateBottomPadding()))
             }
     }
 }
@@ -340,26 +340,26 @@ fun EmptyResultsPlaceholder() {
     }
 }
 
-//@Composable
-//fun AdBanner(modifier: Modifier = Modifier) {
-//    Box(
-//        modifier = modifier
-//            .fillMaxWidth()
-//            .height(50.dp),
-//        contentAlignment = Alignment.BottomCenter
-//    ) {
-//        AndroidView(
-//            modifier = Modifier.fillMaxWidth(),
-//            factory = { context ->
-//                AdView(context).apply {
-//                    setAdSize(AdSize.BANNER)
-//                    adUnitId = "ca-app-pub-4822153353761072/7966371844"
-//                    loadAd(AdRequest.Builder().build())
-//                }
-//            }
-//        )
-//    }
-//}
+@Composable
+fun AdBanner(modifier: Modifier = Modifier) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(50.dp),
+        contentAlignment = Alignment.BottomCenter
+    ) {
+        AndroidView(
+            modifier = Modifier.fillMaxWidth(),
+            factory = { context ->
+                AdView(context).apply {
+                    setAdSize(AdSize.BANNER)
+                    adUnitId = "ca-app-pub-4822153353761072/7966371844"
+                    loadAd(AdRequest.Builder().build())
+                }
+            }
+        )
+    }
+}
 
 fun Modifier.noRippleClickable(onClick: () -> Unit): Modifier = composed {
     this.clickable(
