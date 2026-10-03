@@ -10,9 +10,9 @@ Turkish word finder for Android. Minimal, fast, open source.
 
 ## About
 
-LexiCore is a simple utility for finding Turkish words from given letters. Built with modern Android stack, optimized for performance.
+LexiCore is a simple utility for finding Turkish words from given letters. Built with a modern Android stack, optimized for performance.
 
-No tracking. No analytics. No cloud sync. Your data stays on your device.
+No analytics. No cloud sync. Your searches stay on your device.
 
 ## Technical Stack
 
@@ -27,22 +27,24 @@ No tracking. No analytics. No cloud sync. Your data stays on your device.
 ## Build
 
 Requirements:
-- Java 25
-- Android SDK Platform 37.2
+- Java 25 at `/usr/lib/jvm/java-25-openjdk`
+- Android SDK Platform 37.2 and Build-Tools 37.0.0
+- Signing keystore `lexicore-key.jks` in the project root (alias `lexicore`, same store and key password)
 
 ```bash
 ./build.sh
 ```
 
-Output files will be in `release/` directory.
+Output files will be in the `release/` directory.
 
 ## Privacy
 
-- Zero data collection
+- LexiCore's own code collects no personal data
+- Ads are served by Google AdMob, which receives device data such as the IP address with each ad request
+- Ad requests use child age treatment (COPPA), which stops the advertising ID from being sent, and G-rated ads only
 - No analytics SDKs
 - No network requests (except ads)
-- Local-only storage
-- COPPA compliant ads
+- Local-only storage, no cloud backup
 
 See privacy policy: https://www.dunyadanuzak.com/privacy-lexicore.html
 
