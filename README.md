@@ -16,21 +16,19 @@ No tracking. No analytics. No cloud sync. Your data stays on your device.
 
 ## Technical Stack
 
-| Component | Technology |
-|-----------|------------|
-| Language | Kotlin 2.3.0 |
-| UI | Jetpack Compose |
-| Database | Room 2.8.4 |
-| DI | Hilt 2.59.1 |
-| Target SDK | 36 (Android 16) |
-| Build | Gradle 9.3.1 / AGP 9.0.0 |
-| Java | 25 |
+- Language: Kotlin 2.4.20
+- UI: Jetpack Compose
+- Database: Room 2.8.5
+- DI: Hilt 2.60.1
+- Target SDK: 37 (Android 17)
+- Build: Gradle 9.8.0 / AGP 9.4.1
+- Java: 25
 
 ## Build
 
 Requirements:
 - Java 25
-- Android SDK (API 36)
+- Android SDK Platform 37.2
 
 ```bash
 ./build.sh
