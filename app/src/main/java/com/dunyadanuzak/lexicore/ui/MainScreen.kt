@@ -8,7 +8,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.waitForUpOrCancellation
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,11 +17,15 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.input.TextFieldLineLimits
+import androidx.compose.foundation.text.input.clearText
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -38,17 +41,19 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -58,7 +63,6 @@ import com.dunyadanuzak.lexicore.R
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
-import kotlinx.coroutines.withTimeoutOrNull
 
 sealed class ListItem {
     data class Header(val length: Int, val count: Int) : ListItem()
@@ -72,6 +76,11 @@ private fun getColumnsPerRow(wordLength: Int): Int = if (wordLength >= 13) 2 els
 fun LexiCoreMainScreen(viewModel: MainViewModel) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val uriHandler = LocalUriHandler.current
+    val inputState = rememberTextFieldState()
+
+    LaunchedEffect(inputState) {
+        snapshotFlow { inputState.text.toString() }.collect { viewModel.onInputChange(it) }
+    }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -89,153 +98,154 @@ fun LexiCoreMainScreen(viewModel: MainViewModel) {
                     containerColor = Color.Transparent
                 )
             )
+        },
+        bottomBar = {
+            AdBanner(Modifier.navigationBarsPadding())
         }
     ) { innerPadding ->
-            Column(
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .padding(horizontal = 16.dp)
+        ) {
+            Box(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(top = innerPadding.calculateTopPadding())
-                    .padding(horizontal = 16.dp)
+                    .fillMaxWidth()
+                    .padding(vertical = 12.dp),
+                contentAlignment = Alignment.Center
             ) {
-                Box(
+                Text(
+                    text = stringResource(R.string.brand),
+                    color = MaterialTheme.colorScheme.secondary,
+                    fontWeight = FontWeight.ExtraBold,
+                    fontSize = 28.sp,
+                    letterSpacing = 1.sp,
+                    modifier = Modifier.clickable(
+                        interactionSource = null,
+                        indication = null
+                    ) {
+                        runCatching { uriHandler.openUri("https://www.dunyadanuzak.com/") }
+                    }
+                )
+            }
+
+            if (uiState.hasError) {
+                Card(
+                    colors = CardDefaults.cardColors(containerColor = Color.Red.copy(0.1f)),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 12.dp),
-                    contentAlignment = Alignment.Center
+                        .padding(bottom = 8.dp)
                 ) {
                     Text(
-                        text = "EPSL666",
-                        color = MaterialTheme.colorScheme.secondary,
-                        fontWeight = FontWeight.ExtraBold,
-                        fontSize = 28.sp,
-                        letterSpacing = 1.sp,
-                        modifier = Modifier.noRippleClickable {
-                            uriHandler.openUri("https://www.dunyadanuzak.com/")
-                        }
+                        text = stringResource(R.string.error_unexpected),
+                        color = Color.Red,
+                        modifier = Modifier.padding(16.dp)
                     )
                 }
+            }
 
-                uiState.errorMessage?.let { msg ->
-                    Card(
-                        colors = CardDefaults.cardColors(containerColor = Color.Red.copy(0.1f)),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 8.dp)
-                    ) {
-                        Text(
-                            text = msg,
-                            color = Color.Red,
-                            modifier = Modifier.padding(16.dp)
-                        )
-                    }
-                }
-
-                Card(
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
-                    shape = RoundedCornerShape(16.dp),
-                    modifier = Modifier.fillMaxWidth(),
-                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline)
-                ) {
-                    Column(modifier = Modifier.padding(12.dp)) {
-                        OutlinedTextField(
-                            value = uiState.input,
-                            onValueChange = { viewModel.onInputChange(it) },
-                            placeholder = {
-                                Text(
-                                    stringResource(R.string.enter_letters),
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                            },
-                            trailingIcon = {
-                                if (uiState.input.isNotEmpty()) {
-                                    IconButton(onClick = { viewModel.onInputChange("") }) {
-                                        Text(
-                                            text = "✕",
-                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                            fontSize = 18.sp,
-                                            fontWeight = FontWeight.Bold
-                                        )
-                                    }
-                                }
-                            },
-                            modifier = Modifier.fillMaxWidth(),
-                            shape = RoundedCornerShape(12.dp),
-                            singleLine = true,
-                            colors = TextFieldDefaults.colors(
-                                focusedTextColor = MaterialTheme.colorScheme.onSurface,
-                                unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
-                                cursorColor = MaterialTheme.colorScheme.tertiary,
-                                focusedIndicatorColor = MaterialTheme.colorScheme.tertiary.copy(0.6f),
-                                unfocusedIndicatorColor = MaterialTheme.colorScheme.outline,
-                                focusedContainerColor = Color.Transparent,
-                                unfocusedContainerColor = Color.Transparent
+            Card(
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
+                shape = RoundedCornerShape(16.dp),
+                modifier = Modifier.fillMaxWidth(),
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline)
+            ) {
+                Column(modifier = Modifier.padding(12.dp)) {
+                    OutlinedTextField(
+                        state = inputState,
+                        placeholder = {
+                            Text(
+                                stringResource(R.string.enter_letters),
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
-                        )
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(24.dp))
-                
-                val listState = rememberLazyListState()
-                
-                LaunchedEffect(uiState.results) {
-                    if (uiState.results.isNotEmpty()) {
-                        listState.scrollToItem(0)
-                    }
-                }
- 
-                val listItems by remember {
-                    derivedStateOf {
-                        buildList {
-                            uiState.results.entries
-                                .sortedByDescending { it.key }
-                                .forEach { (length, words) ->
-                                    add(ListItem.Header(length, words.size))
-                                    val columnsPerRow = getColumnsPerRow(length)
-                                    words.chunked(columnsPerRow).forEachIndexed { index, rowWords ->
-                                        add(ListItem.WordRow(rowWords, length, index))
-                                    }
+                        },
+                        trailingIcon = {
+                            if (inputState.text.isNotEmpty()) {
+                                IconButton(onClick = { inputState.clearText() }) {
+                                    val clearDescription = stringResource(R.string.clear_input)
+                                    Text(
+                                        text = stringResource(R.string.clear),
+                                        modifier = Modifier.semantics { contentDescription = clearDescription },
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        fontSize = 18.sp,
+                                        fontWeight = FontWeight.Bold
+                                    )
                                 }
-                        }
-                    }
-                }
- 
-                LazyColumn(
-                    state = listState,
-                    modifier = Modifier.weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
-                    contentPadding = PaddingValues(bottom = innerPadding.calculateBottomPadding() + 24.dp)
-                ) {
-                    items(
-                        items = listItems,
-                        key = { item ->
-                            when (item) {
-                                is ListItem.Header -> "header_${item.length}"
-                                is ListItem.WordRow -> "row_${item.length}_${item.index}"
                             }
                         },
-                        contentType = { item ->
-                            when (item) {
-                                is ListItem.Header -> "header"
-                                is ListItem.WordRow -> "row"
-                            }
-                        }
-                    ) { item ->
-                        when (item) {
-                            is ListItem.Header -> ResultHeader(item.length, item.count)
-                            is ListItem.WordRow -> ResultRow(item.words, item.length)
-                        }
-                    }
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(12.dp),
+                        lineLimits = TextFieldLineLimits.SingleLine,
+                        colors = TextFieldDefaults.colors(
+                            focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                            unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+                            cursorColor = MaterialTheme.colorScheme.tertiary,
+                            focusedIndicatorColor = MaterialTheme.colorScheme.tertiary.copy(0.6f),
+                            unfocusedIndicatorColor = MaterialTheme.colorScheme.outline,
+                            focusedContainerColor = Color.Transparent,
+                            unfocusedContainerColor = Color.Transparent
+                        )
+                    )
+                }
+            }
 
-                    if (uiState.results.isEmpty() && uiState.input.isNotEmpty()) {
-                        item(key = "no_results") {
-                            EmptyResultsPlaceholder()
+            Spacer(modifier = Modifier.height(24.dp))
+
+            val listState = rememberLazyListState()
+
+            LaunchedEffect(uiState.results) {
+                if (uiState.results.isNotEmpty()) {
+                    listState.scrollToItem(0)
+                }
+            }
+
+            val listItems = remember(uiState.results) {
+                buildList {
+                    uiState.results.forEach { (length, words) ->
+                        add(ListItem.Header(length, words.size))
+                        val columnsPerRow = getColumnsPerRow(length)
+                        words.chunked(columnsPerRow).forEachIndexed { index, rowWords ->
+                            add(ListItem.WordRow(rowWords, length, index))
                         }
                     }
                 }
-
-                AdBanner(Modifier.padding(bottom = innerPadding.calculateBottomPadding()))
             }
+
+            LazyColumn(
+                state = listState,
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                contentPadding = PaddingValues(bottom = 24.dp)
+            ) {
+                items(
+                    items = listItems,
+                    key = { item ->
+                        when (item) {
+                            is ListItem.Header -> "header_${item.length}"
+                            is ListItem.WordRow -> "row_${item.length}_${item.index}"
+                        }
+                    },
+                    contentType = { item ->
+                        when (item) {
+                            is ListItem.Header -> "header"
+                            is ListItem.WordRow -> "row"
+                        }
+                    }
+                ) { item ->
+                    when (item) {
+                        is ListItem.Header -> ResultHeader(item.length, item.count)
+                        is ListItem.WordRow -> ResultRow(item.words, item.length)
+                    }
+                }
+
+                if (uiState.results.isEmpty() && uiState.input.isNotEmpty()) {
+                    item(key = "no_results") {
+                        EmptyResultsPlaceholder()
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -254,7 +264,7 @@ fun ResultHeader(length: Int, count: Int) {
                 fontSize = 16.sp
             )
             Text(
-                text = stringResource(R.string.word_count_suffix, count),
+                text = pluralStringResource(R.plurals.word_count_suffix, count, count),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontSize = 11.sp
             )
@@ -279,7 +289,7 @@ fun ResultRow(words: List<String>, wordLength: Int) {
     }
     val context = LocalContext.current
     val clipboardManager = remember { context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager }
-    
+
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -291,11 +301,12 @@ fun ResultRow(words: List<String>, wordLength: Int) {
                     .height(cardHeight)
                     .pointerInput(word) {
                         awaitEachGesture {
-                            val down = awaitFirstDown()
-                            val longPress = withTimeoutOrNull(666) {
+                            awaitFirstDown()
+                            val heldLong = withTimeoutOrNull(666) {
                                 waitForUpOrCancellation()
-                            }
-                            if (longPress == null && down.pressed) {
+                                false
+                            } ?: true
+                            if (heldLong) {
                                 clipboardManager.setPrimaryClip(ClipData.newPlainText("word", word))
                                 waitForUpOrCancellation()
                             }
@@ -356,15 +367,8 @@ fun AdBanner(modifier: Modifier = Modifier) {
                     adUnitId = "ca-app-pub-4822153353761072/7966371844"
                     loadAd(AdRequest.Builder().build())
                 }
-            }
+            },
+            onRelease = { it.destroy() }
         )
     }
-}
-
-fun Modifier.noRippleClickable(onClick: () -> Unit): Modifier = composed {
-    this.clickable(
-        interactionSource = remember { MutableInteractionSource() },
-        indication = null,
-        onClick = onClick
-    )
 }

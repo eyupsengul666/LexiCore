@@ -9,7 +9,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -18,7 +17,7 @@ import javax.inject.Inject
 data class MainUiState(
     val input: String = "",
     val results: Map<Int, List<String>> = emptyMap(),
-    val errorMessage: String? = null
+    val hasError: Boolean = false
 )
 
 @HiltViewModel
@@ -35,26 +34,14 @@ class MainViewModel @Inject constructor(
                 .map { it.input }
                 .distinctUntilChanged()
                 .debounce(200)
-                .flatMapLatest { query ->
-                    if (query.isBlank()) {
-                        flowOf(Result.success(emptyMap<Int, List<String>>()))
-                    } else {
-                        repository.getWords(query)
-                    }
-                }
+                .flatMapLatest { repository.getWords(it) }
                 .collect { result ->
-                    result.fold(
-                        onSuccess = { 
-                            _uiState.update { state -> state.copy(results = it, errorMessage = null) }
-                        },
-                        onFailure = { 
-                            _uiState.update { state -> state.copy(results = emptyMap(), errorMessage = "Beklenmeyen bir hata oluştu") }
-                        }
-                    )
+                    _uiState.update { state ->
+                        state.copy(results = result.getOrDefault(emptyMap()), hasError = result.isFailure)
+                    }
                 }
         }
     }
-
 
     fun onInputChange(newInput: String) {
         _uiState.update { it.copy(input = newInput) }
