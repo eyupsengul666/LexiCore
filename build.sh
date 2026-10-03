@@ -11,29 +11,28 @@ TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
 [ -f "/usr/lib/jvm/java-25-openjdk/bin/java" ] && export JAVA_HOME="/usr/lib/jvm/java-25-openjdk" || { echo "Java 25 not found"; exit 1; }
 [ -f "$KEYSTORE" ] || { echo "Keystore not found"; exit 1; }
 
-SDK_PATH="${ANDROID_SDK_ROOT:-${ANDROID_HOME:-$HOME/Android/Sdk}}"
-[ -d "$SDK_PATH" ] || { echo "SDK not found"; exit 1; }
+export ANDROID_HOME="${ANDROID_SDK_ROOT:-${ANDROID_HOME:-$HOME/Android/Sdk}}"
+[ -d "$ANDROID_HOME" ] || { echo "SDK not found"; exit 1; }
 
 if [ -t 0 ]; then
+    trap 'stty echo' EXIT
     stty -echo
     printf "Password: "
     IFS= read -r PW
     stty echo
     echo ""
 else
-    read -r PW
+    IFS= read -r PW || [ -n "$PW" ]
 fi
 
-./gradlew clean lintRelease bundleRelease assembleRelease \
+env "ORG_GRADLE_PROJECT_android.injected.signing.store.password=$PW" \
+    "ORG_GRADLE_PROJECT_android.injected.signing.key.password=$PW" \
+    ./gradlew clean lintRelease bundleRelease assembleRelease \
     --no-daemon \
     --warning-mode all \
     -Dorg.gradle.java.home="$JAVA_HOME" \
-    -Dandroid.sdk.dir="$SDK_PATH" \
-    -Pandroid.experimental.sdk.test.enableTargetSdkCheck=false \
     -Pandroid.injected.signing.store.file="$(pwd)/$KEYSTORE" \
-    -Pandroid.injected.signing.store.password="${PW}" \
-    -Pandroid.injected.signing.key.alias="$KEY_ALIAS" \
-    -Pandroid.injected.signing.key.password="${PW}"
+    -Pandroid.injected.signing.key.alias="$KEY_ALIAS"
 
 unset PW
 
