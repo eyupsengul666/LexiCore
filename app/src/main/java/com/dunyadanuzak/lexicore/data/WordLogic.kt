@@ -36,9 +36,6 @@ data class WordEntity(
 
 @Dao
 interface WordDao {
-    @Query("SELECT COUNT(*) FROM words")
-    suspend fun getCount(): Int
-
     @Query("SELECT word FROM words WHERE length <= :maxLen AND length >= 2")
     suspend fun findPotentialWords(maxLen: Int): List<String>
 }
@@ -52,42 +49,34 @@ class WordRepository @Inject constructor(
     private val wordDao: WordDao
 ) {
 
-    fun getWords(letters: String): Flow<Result<Map<Int, List<String>>>> = flow<Result<Map<Int, List<String>>>> {
-        try {
-            val sanitized = letters.lowercase(TURKISH_LOCALE).filter { it.isLetter() }
-            if (sanitized.isEmpty()) {
-                emit(Result.success(emptyMap()))
-                return@flow
-            }
-            
-            val userCounts = mutableMapOf<Char, Int>()
-            for (char in sanitized) {
-                userCounts[char] = userCounts.getOrDefault(char, 0) + 1
-            }
-            
-            val potential = wordDao.findPotentialWords(sanitized.length)
-            val filtered: Map<Int, List<String>> = potential.filter { word ->
-                if (word.length > sanitized.length) return@filter false
-                
-                val wordCounts = mutableMapOf<Char, Int>()
-                var possible = true
-                for (char in word) {
-                    val count = wordCounts.getOrDefault(char, 0) + 1
-                    wordCounts[char] = count
-                    if (count > userCounts.getOrDefault(char, 0)) {
-                        possible = false
-                        break
-                    }
+    fun getWords(letters: String): Flow<Result<Map<Int, List<String>>>> = flow {
+        emit(runCatching { findWords(letters) })
+    }.flowOn(Dispatchers.IO)
+
+    private suspend fun findWords(letters: String): Map<Int, List<String>> {
+        val sanitized = letters.lowercase(TURKISH_LOCALE).filter { it.isLetter() }
+        if (sanitized.isEmpty()) return emptyMap()
+
+        val available = sanitized.groupingBy { it.withoutCircumflex() }.eachCount()
+        return wordDao.findPotentialWords(sanitized.length)
+            .filter { word ->
+                val used = mutableMapOf<Char, Int>()
+                word.all { char ->
+                    val letter = char.withoutCircumflex()
+                    val count = used.getOrDefault(letter, 0) + 1
+                    used[letter] = count
+                    count <= available.getOrDefault(letter, 0)
                 }
-                possible
             }
             .groupBy { it.length }
-            .mapValues { (_, words) -> words.sortedWith { a, b -> TURKISH_COLLATOR.compare(a, b) } }
+            .mapValues { (_, words) -> words.sortedWith(TURKISH_COLLATOR) }
             .toSortedMap(reverseOrder())
-            
-            emit(Result.success(filtered))
-        } catch (e: Exception) {
-            emit(Result.failure(e))
-        }
-    }.flowOn(Dispatchers.IO)
+    }
+
+    private fun Char.withoutCircumflex(): Char = when (this) {
+        'â' -> 'a'
+        'î' -> 'i'
+        'û' -> 'u'
+        else -> this
+    }
 }
