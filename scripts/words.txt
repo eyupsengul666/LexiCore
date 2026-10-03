@@ -480,8 +480,6 @@ açtırma
 açtırmak
 açyapı
 ad
-ad-eylem
-ad-fiil
 ada
 adabalık
 adabımuaşeret
@@ -2219,8 +2217,6 @@ alkolölçer
 alkolsüz
 alkolsüzlük
 allah
-allah!
-allah'tan
 allahaısmarladık
 allahlık
 allahsız
@@ -2624,7 +2620,6 @@ analjezik
 analog
 analoji
 analojik
-anam!
 anamal
 anamalcı
 anamalcılık
@@ -2960,7 +2955,6 @@ anlattırma
 anlattırmak
 anlayabilme
 anlayabilmek
-anlayalım!
 anlayış
 anlayışlı
 anlayışlılık
@@ -3992,7 +3986,6 @@ aslanapa
 aslanca
 aslancasına
 aslangiller
-aslanım!
 aslanımsı
 aslankulağı
 aslankuyruğu
@@ -4328,7 +4321,6 @@ atel
 atelye
 aterina
 ateş
-ateş!
 ateşbalık
 ateşbaz
 ateşbazlık
@@ -5298,7 +5290,6 @@ babalar
 babalı
 babalık
 babam
-babam!
 baban
 babasız
 babasızlık
@@ -5395,7 +5386,6 @@ bagaj
 baget
 bagetli
 bağ
-bağ-fiil
 bağa
 bağan
 bağban
@@ -5720,7 +5710,6 @@ bahtsızca
 bahtsızcasına
 bahtsızlık
 bahusus
-bak!
 bakabilme
 bakabilmek
 bakaç
@@ -6598,7 +6587,6 @@ başkurt
 başkurtça
 başlahana
 başlama
-başlama!
 başlamak
 başlanabilme
 başlanabilmek
@@ -10467,7 +10455,6 @@ buyrulma
 buyrulmak
 buyrultu
 buyur
-buyur!
 buyurabilme
 buyurabilmek
 buyurgan
@@ -10962,7 +10949,6 @@ canlanıvermek
 canlanma
 canlanmak
 canlar
-canlar!
 canlı
 canlıcı
 canlıcılık
@@ -11409,10 +11395,6 @@ cf
 change
 charter
 chat
-check-in
-check-out
-check-point
-check-up
 chicago
 cıbıl
 cıbıldak
@@ -11571,7 +11553,6 @@ cicianne
 cicibaba
 cicik
 cicim
-cicim!
 cicimama
 cicimayı
 cicoz
@@ -11762,7 +11743,6 @@ cismanilik
 cismen
 cismeş
 civan
-civanım!
 civankaş
 civankaşı
 civanlık
@@ -14289,7 +14269,6 @@ cüzzamlı
 çocukçu
 çocuklama
 çocuklamak
-çocuklar!
 çocuklaşabilme
 çocuklaşabilmek
 çocuklaşma
@@ -15388,7 +15367,6 @@ davranış
 davranışçılık
 davranışsal
 davranma
-davranma!
 davranmak
 davudi
 davul
@@ -15603,7 +15581,6 @@ defnolunma
 defnolunmak
 defo
 defol
-defol!
 defolma
 defolmak
 defolu
@@ -15979,7 +15956,6 @@ demarke
 dembedem
 demci
 deme
-deme!
 demeç
 demek
 dememek
@@ -19432,29 +19408,6 @@ düzülmek
 düzyazı
 dy
 dzfgdf
-e-arşiv
-e-belge
-e-bilet
-e-defter
-e-dergi
-e-devlet
-e-devre
-e-fatura
-e-gazete
-e-içerik
-e-imza
-e-kayıt
-e-kitap
-e-kütüphane
-e-mail
-e-müze
-e-nabız
-e-okul
-e-öğrenme
-e-posta
-e-sözlük
-e-tebligat
-e-ticaret
 ebabil
 ebat
 ebcet
@@ -19886,8 +19839,6 @@ ejder
 ejderha
 ejektör
 ek
-ek-eylem
-ek-fiil
 ekâbir
 ekalliyet
 ekarte
@@ -22769,7 +22720,6 @@ filvaki
 filyasyon
 fin
 final
-final-four
 finalist
 finalistlik
 finalizm
@@ -22818,7 +22768,6 @@ firkete
 firketeleme
 firketelemek
 firma
-first-class
 firuze
 fisebilillah
 fiskal
@@ -23051,7 +23000,6 @@ fonotelgraf
 font
 fora
 forint
-fork-lift
 form
 forma
 formaldehit
@@ -23225,8 +23173,6 @@ fransızlık
 fransiyum
 frapan
 frape
-free-lance
-free-shop
 frekans
 fren
 frenci
@@ -23285,7 +23231,6 @@ fuarcı
 fuarcılık
 fuat
 fuaye
-fuel-oil
 fueloil
 fuhş
 fuhuş
@@ -23296,7 +23241,6 @@ fukuslar
 ful
 fular
 fule
-full-time
 fulya
 fulyabalık
 funda
@@ -23768,7 +23712,6 @@ gazinocu
 gazinoculuk
 gaziosmanpaşa
 gazipaşa
-gazla!
 gazlama
 gazlamak
 gazlanma
@@ -25213,7 +25156,6 @@ görkemsizlik
 görklü
 görklülük
 görme
-görme!
 görmece
 görmegöze
 görmek
@@ -25226,7 +25168,6 @@ görmezlenmek
 görmezlik
 görmüşlük
 görsel
-görsel-işitsel
 görsellik
 görü
 görücü
@@ -25495,7 +25436,6 @@ gözükebilmek
 gözükme
 gözükmek
 gözüküş
-gözüm!
 gözünde
 gözyaş
 gözyaşı
@@ -26529,7 +26469,6 @@ hâletinez
 hâletiruhiye
 haletme
 haletmek
-half-time
 halfa
 halfeti
 halhal
@@ -27108,7 +27047,6 @@ haslık
 hasm
 hasmane
 haspa
-haspam!
 hasr
 hasredebilme
 hasredebilmek
@@ -27275,7 +27213,6 @@ hattatlık
 hattıhareket
 hatun
 hatuncuk
-haute-couture
 hav
 hava
 havaalan
@@ -27747,7 +27684,6 @@ hempa
 hempalık
 hemşehri
 hemşehrilik
-hemşehrim!
 hemşin
 hemşire
 hemşirelik
@@ -28200,7 +28136,6 @@ hidroterapi
 hidrotermal
 hidrozol
 hidrür
-high-tech
 higrofil
 higrometre
 higrometrik
@@ -29382,7 +29317,6 @@ icaz
 icazet
 icazetname
 icbar
-ice-tea
 icma
 icmal
 icra
@@ -29836,7 +29770,6 @@ ikicinsli
 ikiçifte
 ikieşli
 ikikanatlı
-ikile!
 ikilem
 ikileme
 ikilemek
@@ -30972,7 +30905,6 @@ ishal
 ishalli
 isilik
 isim
-isim-fiil
 isimci
 isimcilik
 isimlendirebilme
@@ -31870,7 +31802,6 @@ jale
 jaluzi
 jaluzili
 jaluzisiz
-jam-session
 jamaika
 jambon
 jambonluk
@@ -31932,7 +31863,6 @@ jeotropizma
 jersey
 jest
 jet
-jet-lag
 jeton
 jetoncu
 jetonculuk
@@ -31965,7 +31895,6 @@ jokeyli
 jokeylik
 jokeysiz
 jorjet
-joy-stick
 jöle
 jöleli
 jölesiz
@@ -36751,7 +36680,6 @@ kim
 kimi
 kimileyin
 kimisi
-kimlerden?
 kimlik
 kimlikli
 kimliklileştirme
@@ -38929,8 +38857,6 @@ kuple
 kupon
 kupür
 kur
-kur'an
-kur’an
 kura
 kuraa
 kurabilme
@@ -39478,7 +39404,6 @@ kuzulaşma
 kuzulaşmak
 kuzulu
 kuzuluk
-kuzum!
 kuzumantar
 küba
 kübalı
@@ -40525,7 +40450,6 @@ lome
 lonca
 loncacılık
 londra
-long-play
 longa
 longoz
 longuz
@@ -45897,7 +45821,6 @@ nizamsızlık
 nizasız
 nizip
 no
-no-frost
 nobelyum
 nobran
 nobranca
@@ -45948,7 +45871,6 @@ nominalizm
 nominatif
 nomografi
 nomografik
-non-stop
 nonfigüratif
 nonoş
 nordik
@@ -46252,9 +46174,6 @@ oerstit
 of
 ofans
 ofansif
-off-line
-off-road
-off-shore
 ofis
 ofla
 oflama
@@ -46646,7 +46565,6 @@ omuzlayış
 omuzlu
 omuzluk
 on
-on-line
 ona
 onaltılık
 onam
@@ -48853,7 +48771,6 @@ parselletme
 parselletmek
 parselli
 parşömen
-part-time
 partal
 partenogenez
 parter
@@ -49016,7 +48933,6 @@ patiska
 patlak
 patlakça
 patlama
-patlama!
 patlamak
 patlamalı
 patlangaç
@@ -49764,7 +49680,6 @@ pinti
 pintileşme
 pintileşmek
 pintilik
-pipe-line
 pipet
 pipi
 pipiriklenme
@@ -49995,7 +49910,6 @@ platoncu
 platonculuk
 platonik
 platonizm
-play-off
 playback
 playmaker
 plaza
@@ -50210,7 +50124,6 @@ posalı
 posasız
 posof
 post
-post-it
 posta
 postacı
 postacılık
@@ -53644,7 +53557,6 @@ selen
 selendi
 selentere
 selenyum
-self-service
 selfdeterminasyon
 selfie
 selfservis
@@ -54239,7 +54151,6 @@ sevkülceyş
 sevme
 sevmek
 sevr
-sevsinler!
 seyahat
 seyahatname
 seydikemer
@@ -54295,7 +54206,6 @@ seyreltilmek
 seyreltme
 seyreltmek
 seyret
-seyret!
 seyretme
 seyretmek
 seyrettirme
@@ -54416,7 +54326,6 @@ sıçtırma
 sıçtırmak
 sıdk
 sıfat
-sıfat-fiil
 sıfatfiil
 sıfatlandırma
 sıfatlandırmak
@@ -55003,7 +54912,6 @@ siklememek
 siklon
 sikme
 sikmek
-siktir!
 siktirici
 siktirmek
 silah
@@ -55532,7 +55440,6 @@ smaçör
 smokin
 smokinli
 sn
-snack-bar
 snobizm
 snop
 snopluk
@@ -56326,7 +56233,6 @@ stalagmit
 stalaktit
 stalin
 stalingrat
-stand-by
 standardizasyon
 standart
 standartlaşma
@@ -57805,7 +57711,6 @@ sydney
 şekerciboyasıgiller
 şekercilik
 şekerfasulye
-şekerim!
 şekerimsi
 şekerkamış
 şekerleme
@@ -61239,7 +61144,6 @@ tezyinat
 tezyinî
 tezyit
 th
-think-tank
 tıbben
 tıbbi
 tıbbileşme
@@ -61890,7 +61794,6 @@ tophane
 topik
 topkadife
 topla
-topla!
 toplaç
 toplak
 toplam
@@ -61989,7 +61892,6 @@ topu
 topuk
 topukdemir
 topukdöven
-topukla!
 topuklama
 topuklamak
 topuklu
@@ -63431,7 +63333,6 @@ upuygur
 upuzun
 ur
 urağan
-ural-altay
 uran
 uranüs
 uranyum
@@ -63886,7 +63787,6 @@ uyuzluk
 uyuzot
 uyuzsinek
 uz
-uza!
 uzagörüm
 uzak
 uzakça
@@ -66225,7 +66125,6 @@ yararsızca
 yararsızlık
 yarasa
 yarasalar
-yarasın!
 yaraş
 yaraşık
 yaraşıklı
@@ -66610,7 +66509,6 @@ yavanlaştırma
 yavanlaştırmak
 yavanlık
 yavaş
-yavaş!
 yavaşa
 yavaşça
 yavaşçacık
@@ -66642,7 +66540,6 @@ yavrulama
 yavrulamak
 yavrulatma
 yavrulatmak
-yavrum!
 yavsı
 yavşak
 yavşan
@@ -67294,7 +67191,6 @@ yetişkin
 yetişkinlik
 yetişme
 yetişmek
-yetişmeyesi!
 yetişmiş
 yetişmişlik
 yetiştirebilme
@@ -68358,7 +68254,6 @@ yüreksizce
 yüreksizlik
 yürekten
 yürü
-yürü!
 yürük
 yürüklük
 yürüme
@@ -68481,8 +68376,6 @@ yüzüvermek
 yüzyıl
 yüzyıllarca
 yüzyıllık
-z-kitap
-z-kütüphane
 zaaf
 zabıt
 zabıta
@@ -68641,7 +68534,6 @@ zararsızca
 zararsızlık
 zarcı
 zarf
-zarf-fiil
 zarfçı
 zarfçılık
 zarfında
